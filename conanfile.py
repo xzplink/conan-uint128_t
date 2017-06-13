@@ -2,12 +2,12 @@ from conans import ConanFile, CMake, tools
 from conans.errors import ConanException
 import os, shutil, glob
 
-class GoogleBenchmarkConan(ConanFile):
-    name = 'benchmark'
-    version = '1.1.0'
-    description = 'A microbenchmark support library.'
-    url = 'http://github.com/jjones646/conan-google-benchmark'
-    license = 'https://github.com/google/benchmark/blob/v1.1.0/LICENSE'
+class Uint128_tConan(ConanFile):
+    name = 'uint128_t'
+    version = '0.0.1'
+    description = 'A uint128_t library for C++'
+    url = 'http://github.com/zacklj89/conan-uint128_t'
+    license = 'https:///github.com/calccrypto/uint128_t/LICENSE'
     settings = 'arch', 'build_type', 'compiler', 'os'
     options =   { 'enable_lto': [True, False] }
     default_options = 'enable_lto=False'
@@ -16,13 +16,12 @@ class GoogleBenchmarkConan(ConanFile):
     build_policy = 'missing'
 
     def source(self):
-        archive_url = 'https://github.com/google/benchmark/archive/v{!s}.zip'.format(self.version)
-        tools.download(archive_url, 'benchmark.zip')
-        tools.check_sha256('benchmark.zip', '3f5321836cf531e621e0187ccbb1d836cd909994ed00c102a41385cbc1254e4e')
-        tools.unzip('benchmark.zip')
-        os.unlink('benchmark.zip')
-        shutil.move('benchmark-{!s}'.format(self.version), 'benchmark')
-        tools.patch(patch_file='rt-lib.patch', base_path='benchmark')
+        archive_url = 'https://github.com/calccrypto/uint128_t{!s}.zip'.format(self.version)
+        tools.download(archive_url, 'uint128_t-master.zip')
+        tools.check_sha256('uint128_t-master.zip', 'dd6d767feb439b6b318c5f0e7dfac8644bf58ffa348bcf441ea8ee0da3e8baf2')
+        tools.unzip('uint128_t-master.zip')
+        os.unlink('uint128_t-master.zip')
+        shutil.move('uint128_t-{!s}'.format(self.version), 'uint128_t')
 
     def build(self):
         cmake = CMake(self.settings)
@@ -42,7 +41,7 @@ class GoogleBenchmarkConan(ConanFile):
         build_extra_args = ' '.join(build_extra_args)
         self.run('cmake --build . --target install {!s} {!s}'.format(cmake.build_config, build_extra_args))
         for f in glob.glob(os.path.join('bin', '*')):
-            shutil.copy2(f, os.path.join('benchmark', 'test'))
+            shutil.copy2(f, os.path.join('uint128_t', 'test'))
         self.run('ctest -C {!s}'.format(self.settings.build_type))
 
     def package(self):
